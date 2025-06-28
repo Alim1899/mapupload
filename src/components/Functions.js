@@ -1,5 +1,5 @@
 import app from "../firebaseConfig";
-import { getDatabase, get, ref, set } from "firebase/database";
+import { getDatabase, get, ref, set, remove } from "firebase/database";
 
 export const fetchGeoJson = async (type, layer) => {
   const db = getDatabase(app);
@@ -8,7 +8,6 @@ export const fetchGeoJson = async (type, layer) => {
     const snapshot = await get(projectsRef);
     if (snapshot.exists()) {
       //return snapshot.val();
-      console.log(snapshot.val());
     } else {
       console.log(`No JSON data available for ${layer}`);
       return null;
@@ -19,11 +18,28 @@ export const fetchGeoJson = async (type, layer) => {
 };
 
 export const savelayer = (category, name, file) => {
-  console.log(category, name, file);
   if (!category || !name || !file) return;
-  const db = getDatabase();
 
-  set(ref(db, `geojson/${category}/${name}`), file); // Only adds or replaces this one child
+  const db = getDatabase();
+  set(ref(db, `geojson/${category}/${name}`), file)
+    .then(() => {
+      alert("Data uploaded successfully!");
+    })
+    .catch((error) => {
+      alert("Failed to upload data: " + error.message);
+    });
+};
+export const deleteLayer = (category, name) => {
+  if (!category || !name) return;
+
+  const db = getDatabase();
+  remove(ref(db, `geojson/${category}/${name}`))
+    .then(() => {
+      alert("Data Deleted successfully!");
+    })
+    .catch((error) => {
+      alert("Failed to Delete data: " + error.message);
+    });
 };
 
 export const handleFileUpload = (event, setLayerData) => {
@@ -41,31 +57,31 @@ export const handleFileUpload = (event, setLayerData) => {
 export const mapCategories = [
   {
     key: "nature",
-    name: "ბუნება",
+    name: "nature",
   },
   {
     key: "population",
-    name: "მოსახლეობა",
+    name: "population",
   },
   {
     key: "economy",
-    name: "ეკონომიკა",
+    name: "economy",
   },
   {
     key: "education",
-    name: "განათლება",
+    name: "education",
   },
   {
     key: "culture",
-    name: "კულტურა",
+    name: "culture",
   },
   {
     key: "tourism",
-    name: "ტურიზმი",
+    name: "tourism",
   },
   {
     key: "history",
-    name: "ისტორია",
+    name: "history",
   },
 ];
 
