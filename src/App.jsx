@@ -1,6 +1,11 @@
 import "./App.css";
+import Upload from "./components/Upload";
 function App() {
-  return <>APP</>;
+  return (
+    <>
+      <Upload />
+    </>
+  );
 }
 
 export default App;
