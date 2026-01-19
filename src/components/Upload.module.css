@@ -1,0 +1,42 @@
+.layout {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  flex-direction: column;
+  max-width: 1280px;
+}
+.toggle{
+    text-align: center;
+}
+.toggle > button {
+  outline: none;
+  border: none;
+  background-color: wheat;
+  height: 50px;
+  width: 300px;
+  margin: 20px 5px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  border: 2px solid crimson;
+  border-radius: 50px;
+}
+.content{
+  width: 80%;
+  margin: auto;
+}
+.delete,.upload{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.delete>input, .upload>input{
+height: 35px;
+margin: 10px 0;
+border: 1px solid lightgray;
+}
+.delete>button, .upload>button{
+  width: 50%;
+  margin: auto;
+  height: 35px;
+  border-radius: 50px;
+}

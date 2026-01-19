@@ -29,21 +29,33 @@ export const savelayer = (category, name, file) => {
       alert("Failed to upload data: " + error.message);
     });
 };
-export const deleteLayer = (category, name) => {
-  if (!category || !name) return;
+export const deleteLayer = async (name) => {
+  if (!name) {
+    alert("Please enter a layer name");
+    return;
+  }
 
   const db = getDatabase();
-  remove(ref(db, `geojson/${category}/${name}`))
-    .then(() => {
-      alert("Data Deleted successfully!");
-    })
-    .catch((error) => {
-      alert("Failed to Delete data: " + error.message);
-    });
+  const layerRef = ref(db, name);
+  console.log(layerRef);
+  try {
+    const snapshot = await get(layerRef);
+
+    if (!snapshot.exists()) {
+      alert("Layer does not exist");
+      return;
+    }
+
+    await remove(layerRef);
+    alert("Data deleted successfully!");
+  } catch (error) {
+    alert("Failed to delete data: " + error.message);
+  }
 };
 
 export const handleFileUpload = (event, setLayerData) => {
   const file = event.target.files[0];
+
   if (!file) return;
 
   const reader = new FileReader();
@@ -52,6 +64,32 @@ export const handleFileUpload = (event, setLayerData) => {
   };
 
   reader.readAsText(file);
+};
+
+export const handleSvgUpload = (event, setLayerSigns) => {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+
+  const results = [];
+
+  files.forEach((file, index) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      results.push({
+        key:index,
+        name: file.name,
+        content: e.target.result, // SVG text
+      });
+
+      // Update state only after all files are read
+      if (results.length === files.length) {
+        setLayerSigns(results);
+      }
+    };
+
+    reader.readAsText(file);
+  });
 };
 
 export const mapCategories = [

@@ -1,9 +1,9 @@
 import "./App.css";
-import Upload from "./components/Upload";
+import Layout from "./components/Layout";
 function App() {
   return (
     <>
-      <Upload />
+      <Layout />
     </>
   );
 }
