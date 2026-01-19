@@ -5,6 +5,7 @@ import {
   handleSvgUpload,
   mapCategories,
   savelayer,
+  saveSigns,
 } from "./Functions";
 import { useEffect, useState } from "react";
 const Upload = () => {
@@ -18,9 +19,10 @@ const Upload = () => {
     label: el.name,
   }));
   useEffect(() => {
+    selectedType && console.log(selectedType);
     layerData && console.log(layerData);
     layerSigns && console.log(layerSigns);
-  }, [layerData, layerSigns]);
+  }, [layerData, layerSigns, selectedType]);
   useEffect(() => {
     selectedType && console.log(selectedType.label); // 🟢 log selected category whenever it changes
   }, [selectedType]);
@@ -58,7 +60,20 @@ const Upload = () => {
         type="button"
         onClick={() => savelayer(selectedType.label, layerName, layerData)}
       >
-        ატვირთვა
+        რუკის ატვირთვა
+      </button>
+      <button
+        style={{ marginTop: "20px" }}
+        type="button"
+        disabled={
+          !selectedType?.label ||
+          !layerName ||
+          !Array.isArray(layerSigns) ||
+          layerSigns.length === 0
+        }
+        onClick={() => saveSigns(selectedType.label, layerName, layerSigns)}
+      >
+        ნიშნების ატვირთვა
       </button>
     </div>
   );
