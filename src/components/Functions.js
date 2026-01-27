@@ -82,19 +82,20 @@ export const handleSvgUpload = (event, setLayerSigns) => {
         };
         reader.readAsText(file);
       });
-    })
+    }),
   ).then((results) => {
     setLayerSigns(results);
   });
 };
 
-
 export const saveSigns = async (category, name, signs) => {
   if (!category || !name || !Array.isArray(signs) || !signs.length) return;
 
   const db = getDatabase();
-  const propsRef = ref(db, `${category}/${name}/props`);
-
+  const propsRef = ref(
+    db,
+    `${category}/${name}/features`,
+  );
   try {
     // 1️⃣ Fetch existing props
     const snapshot = await get(propsRef);
@@ -104,6 +105,7 @@ export const saveSigns = async (category, name, signs) => {
     }
 
     const props = snapshot.val();
+    
 
     // 2️⃣ Build SVG lookup by filename (without .svg)
     const signMap = {};
@@ -114,11 +116,11 @@ export const saveSigns = async (category, name, signs) => {
 
     // 3️⃣ Prepare partial updates
     const updates = {};
-
     Object.entries(props).forEach(([key, prop]) => {
-      if (!prop?.name_en) return;
+      console.log(prop.properties);
+      if (!prop.properties?.name_en) return;
 
-      const matchKey = prop.name_en.trim();
+      const matchKey = prop.properties.name_en.trim();
 
       if (signMap[matchKey]) {
         updates[`${key}/sign`] = signMap[matchKey];
@@ -138,7 +140,6 @@ export const saveSigns = async (category, name, signs) => {
     alert("Failed to save aligned signs: " + error.message);
   }
 };
-
 
 export const mapCategories = [
   {

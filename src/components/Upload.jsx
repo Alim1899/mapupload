@@ -7,25 +7,16 @@ import {
   savelayer,
   saveSigns,
 } from "./Functions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 const Upload = () => {
   const [layerData, setLayerData] = useState([]);
   const [layerSigns, setLayerSigns] = useState([]);
   const [selectedType, setSelectedType] = useState([]);
   const [layerName, setLayerName] = useState(""); // <-- new state for input value
-
   const options = mapCategories.map((el) => ({
     value: el.key,
     label: el.name,
   }));
-  useEffect(() => {
-    selectedType && console.log(selectedType);
-    layerData && console.log(layerData);
-    layerSigns && console.log(layerSigns);
-  }, [layerData, layerSigns, selectedType]);
-  useEffect(() => {
-    selectedType && console.log(selectedType.label); // 🟢 log selected category whenever it changes
-  }, [selectedType]);
   return (
     <div className={classes.upload}>
       <Select
