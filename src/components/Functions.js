@@ -36,7 +36,7 @@ export const deleteLayer = async (name) => {
   }
 
   const db = getDatabase();
-  const layerRef = ref(db, name);
+  const layerRef = ref(db, `/${name}`);
   console.log(layerRef);
   try {
     const snapshot = await get(layerRef);
@@ -92,10 +92,7 @@ export const saveSigns = async (category, name, signs) => {
   if (!category || !name || !Array.isArray(signs) || !signs.length) return;
 
   const db = getDatabase();
-  const propsRef = ref(
-    db,
-    `${category}/${name}/features`,
-  );
+  const propsRef = ref(db, `${category}/${name}/features`);
   try {
     // 1️⃣ Fetch existing props
     const snapshot = await get(propsRef);
@@ -105,7 +102,6 @@ export const saveSigns = async (category, name, signs) => {
     }
 
     const props = snapshot.val();
-    
 
     // 2️⃣ Build SVG lookup by filename (without .svg)
     const signMap = {};
@@ -118,9 +114,14 @@ export const saveSigns = async (category, name, signs) => {
     const updates = {};
     Object.entries(props).forEach(([key, prop]) => {
       console.log(prop.properties);
-      if (!prop.properties?.name_en) return;
 
-      const matchKey = prop.properties.name_en.trim();
+      const name = prop.properties?.name_en?.trim();
+      const type = prop.properties?.type_en?.trim();
+
+      console.log(name, type);
+      if (!name && !type) return; // skip if both are missing
+
+      const matchKey = type || name; // prefer name_en, fallback to type_en
 
       if (signMap[matchKey]) {
         updates[`${key}/sign`] = signMap[matchKey];

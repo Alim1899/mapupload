@@ -15,12 +15,13 @@ const Delete = () => {
   useEffect(()=>{
     console.log(category, value);
   },[value,category])
+
   return (
     <div className={classes.delete}>
     <Select
         options={options}
         value={category}
-        onChange={(option) => setCategory(option.value)}
+        onChange={(option) => setCategory(option)}
       />
       <input
         value={value}
