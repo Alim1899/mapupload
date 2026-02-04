@@ -111,30 +111,35 @@ export const saveSigns = async (category, name, signs) => {
     });
 
     // 3️⃣ Prepare partial updates
-    const updates = {};
-    Object.entries(props).forEach(([key, prop]) => {
-      console.log(prop.properties);
+const updates = {};
 
-      const name = prop.properties?.name_en?.trim();
-      const type = prop.properties?.type_en?.trim();
+Object.entries(props).forEach(([key, prop]) => {
+  const name = prop.properties?.name_en;
+  const type = prop.properties?.type_en;
 
-      console.log(name, type);
-      if (!name && !type) return; // skip if both are missing
+  let match = null;
 
-      const matchKey = type || name; // prefer name_en, fallback to type_en
+  // ✅ First try type
+  if (type && signMap[type]) {
+    match = signMap[type];
+  }
+  // ✅ If type didn’t match, try name
+  else if (name && signMap[name]) {
+    match = signMap[name];
+  }
 
-      if (signMap[matchKey]) {
-        updates[`${key}/sign`] = signMap[matchKey];
-      }
-    });
+  if (match) {
+    updates[`${key}/sign`] = match;
+  }
+});
 
-    // 4️⃣ Update only matched elements
-    if (Object.keys(updates).length === 0) {
-      alert("No matching signs found");
-      return;
-    }
+if (Object.keys(updates).length === 0) {
+  alert("No matching signs found");
+  return;
+}
 
-    await update(propsRef, updates);
+await update(propsRef, updates);
+
 
     alert("Signs successfully aligned and saved!");
   } catch (error) {
