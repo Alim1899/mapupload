@@ -176,6 +176,10 @@ export const mapCategories = [
     key: "history",
     name: "history",
   },
+    {
+    key: "healthcare",
+    name: "healthcare",
+  },
 ];
 
 //  try {
